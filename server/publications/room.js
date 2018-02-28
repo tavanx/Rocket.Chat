@@ -12,6 +12,7 @@ const fields = {
 	announcement: 1,
 	muted: 1,
 	_updatedAt: 1,
+	lm: 1,
 	archived: 1,
 	jitsiTimeout: 1,
 	description: 1,

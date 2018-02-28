@@ -1,4 +1,5 @@
 import Busboy from 'busboy';
+import _ from 'underscore';
 
 RocketChat.API.v1.addRoute('rooms.get', { authRequired: true }, {
 	get() {
@@ -24,6 +25,40 @@ RocketChat.API.v1.addRoute('rooms.get', { authRequired: true }, {
 		}
 
 		return RocketChat.API.v1.success(result);
+	}
+});
+
+RocketChat.API.v1.addRoute('rooms.list', { authRequired: true }, {
+	get() {
+		const { offset, count } = this.getPaginationItems();
+		const { sort, fields, query } = this.parseJsonQuery();
+		const ourQuery = Object.assign({}, query, {
+			'u._id': this.userId
+		});
+
+		let rooms = _.pluck(RocketChat.models.Subscriptions.find(ourQuery).fetch(), '_room');
+		const totalCount = rooms.length;
+
+		rooms = RocketChat.models.Rooms.processQueryOptionsOnResult(rooms, {
+			sort: sort ? sort : { lm: -1 },
+			skip: offset,
+			limit: count,
+			fields
+		});
+
+		rooms.forEach((r) => {
+			Meteor.runAsUser(this.userId, () => {
+				r.lastmsg = RocketChat.models.Messages.getLastVisibleMessageSentWithNoTypeByRoomId(r._id);
+				r.unread = RocketChat.models.Subscriptions.findOneByRoomIdAndUserId(r._id, this.userId).unread;
+			});
+		});
+
+		return RocketChat.API.v1.success({
+			rooms,
+			offset,
+			count: rooms.length,
+			total: totalCount
+		});
 	}
 });
 
