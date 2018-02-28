@@ -156,6 +156,16 @@ RocketChat.API.v1.addRoute('groups.delete', { authRequired: true }, {
 	}
 });
 
+RocketChat.API.v1.addRoute('group.deleteFile', { authRequired: true }, {
+	post() {
+		const params = this.requestParams();
+
+		return RocketChat.API.v1.success({
+			file: RocketChat.models.Avatars.deleteFile(params.fileId)
+		});
+	}
+});
+
 RocketChat.API.v1.addRoute('groups.files', { authRequired: true }, {
 	get() {
 		const findResult = findPrivateGroupByIdOrName({ params: this.requestParams(), userId: this.userId, checkedArchived: false });
@@ -198,6 +208,10 @@ RocketChat.API.v1.addRoute('groups.allFiles', { authRequired: true }, {
 			limit: count,
 			fields
 		}).fetch();
+		files.forEach((e)=>{
+			const user = RocketChat.models.Users.findOneById(e.userId, { fields: { username: 1, name: 1 }});
+			e.user = user;
+		});
 
 		return RocketChat.API.v1.success({
 			files,
