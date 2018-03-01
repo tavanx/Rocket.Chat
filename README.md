@@ -1,3 +1,6 @@
+docker build -t tavan/rocket.chat:v0.0.1 .
+docker push tavan/rocket.chat:v0.0.1
+
 ![Rocket.Chat logo](https://rocket.chat/images/logo/logo-dark.svg?v3)
 
 # The Ultimate Open Source WebChat Platform

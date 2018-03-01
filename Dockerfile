@@ -1,9 +1,6 @@
 FROM node:8-slim
 
-ADD . /app
-
-# crafted and tuned by pierre@ozoux.net and sing.li@rocket.chat
-MAINTAINER buildmaster@rocket.chat
+MAINTAINER alex.zhang@tavanv.com
 
 RUN groupadd -r rocketchat \
 &&  useradd -r -g rocketchat rocketchat \
@@ -16,13 +13,12 @@ ENV RC_VERSION 0.61.2
 
 WORKDIR /app
 
-RUN set -x \
- && cd /app/bundle/programs/server \
- && npm install
+RUN npm install --registry=https://registry.npm.taobao.org \
+    &&  && npm cache clear --force
 
 USER rocketchat
 
-WORKDIR /app/bundle
+WORKDIR /app/server
 
 # needs a mongoinstance - defaults to container linking with alias 'db'
 ENV DEPLOY_METHOD=docker-official \
