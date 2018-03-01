@@ -159,9 +159,10 @@ RocketChat.API.v1.addRoute('groups.delete', { authRequired: true }, {
 RocketChat.API.v1.addRoute('group.deleteFile', { authRequired: true }, {
 	post() {
 		const params = this.requestParams();
+		console.log(params);
 
 		return RocketChat.API.v1.success({
-			file: RocketChat.models.Avatars.deleteFile(params.fileId)
+			file: RocketChat.models.Uploads.deleteFile(params.fileId)
 		});
 	}
 });
