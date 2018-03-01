@@ -1,3 +1,5 @@
+meteor add rocketchat:lib
+NODE_OPTIONS="--max-old-space-size=8142" meteor build --server-only --directory ./releases
 docker build -t tavan/rocket.chat:v0.0.1 .
 docker push tavan/rocket.chat:v0.0.1
 

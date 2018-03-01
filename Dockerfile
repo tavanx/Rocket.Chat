@@ -1,6 +1,10 @@
 FROM node:8-slim
 
+ENV RC_VERSION 0.62.0-rc.4
+
 MAINTAINER alex.zhang@tavanv.com
+
+COPY ./releases /app
 
 RUN groupadd -r rocketchat \
 &&  useradd -r -g rocketchat rocketchat \
@@ -9,20 +13,24 @@ RUN groupadd -r rocketchat \
 
 VOLUME /app/uploads
 
-ENV RC_VERSION 0.61.2
-
 WORKDIR /app
 
-RUN npm install --registry=https://registry.npm.taobao.org \
-    &&  && npm cache clear --force
+RUN npm install bcrypt -g
+
+RUN set -x \
+ && cd /app/bundle/programs/server \
+ && npm install --registry=https://registry.npm.taobao.org \
+ && npm cache clear --force \
+ && chown -R rocketchat:rocketchat /app
 
 USER rocketchat
 
-WORKDIR /app/server
+WORKDIR /app/bundle
 
 # needs a mongoinstance - defaults to container linking with alias 'db'
-ENV DEPLOY_METHOD=docker-official \
-    MONGO_URL=mongodb://db:27017/meteor \
+ENV DEPLOY_METHOD=docker \
+    NODE_ENV=production \
+    MONGO_URL=mongodb://mongo:27017/rocketchat \
     HOME=/tmp \
     PORT=3000 \
     ROOT_URL=http://localhost:3000 \
