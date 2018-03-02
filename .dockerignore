@@ -4,3 +4,6 @@ LICENSE
 README.md
 docker-compose.yml
 Dockerfile
+.meteor/local
+packages/*/.build*
+node_modules

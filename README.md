@@ -1,7 +1,15 @@
 meteor add rocketchat:lib
-NODE_OPTIONS="--max-old-space-size=8142" meteor build --server-only --directory ./releases
+NODE_OPTIONS="--max-old-space-size=8142" meteor build --server-only ./releases --architecture=os.linux.x86_64
 docker build -t tavan/rocket.chat:v0.0.1 .
 docker push tavan/rocket.chat:v0.0.1
+docker run --rm \
+  -v /Users/alexzhang/Codes/TAVAN/test/Rocket.Chat:/bundle \
+  -e MONGO_URL=mongodb://localhost:27017/appdb \
+  -e MONGO_OPLOG_URL=mongodb://localhost:27017/local \
+  -p 8083:80 \
+  --net host \
+  abernix/meteord:base
+npm install chromedriver --chromedriver_cdnurl=https://npm.taobao.org/mirrors/chromedriver
 
 ![Rocket.Chat logo](https://rocket.chat/images/logo/logo-dark.svg?v3)
 

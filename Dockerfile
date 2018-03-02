@@ -1,29 +1,22 @@
-FROM node:8-slim
+FROM rocketchat/base:8
 
 ENV RC_VERSION 0.62.0-rc.4
 
 MAINTAINER alex.zhang@tavanv.com
 
-COPY ./releases /app
-
-RUN groupadd -r rocketchat \
-&&  useradd -r -g rocketchat rocketchat \
-&&  mkdir -p /app/uploads \
-&&  chown rocketchat.rocketchat /app/uploads
-
-VOLUME /app/uploads
-
-WORKDIR /app
-
-RUN npm install bcrypt -g
+RUN mkdir /app
+COPY ./releases/Rocket.Chat.tar.gz /app
 
 RUN set -x \
+ && cd /app \
+ && tar -zxf Rocket.Chat.tar.gz -C /app \
  && cd /app/bundle/programs/server \
- && npm install --registry=https://registry.npm.taobao.org \
- && npm cache clear --force \
+ && npm install \
  && chown -R rocketchat:rocketchat /app
 
 USER rocketchat
+
+VOLUME /app/uploads
 
 WORKDIR /app/bundle
 
