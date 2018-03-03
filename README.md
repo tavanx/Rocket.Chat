@@ -1,7 +1,17 @@
 meteor add rocketchat:lib
-NODE_OPTIONS="--max-old-space-size=8142" meteor build --server-only ./releases --architecture=os.linux.x86_64
+
+meteor npm install --save bcrypt
+meteor npm install -g node-gyp node-pre-gyp
+
+#build method
+meteor add rocketchat:lib
+NODE_OPTIONS="--max-old-space-size=8142" meteor build --server-only --headless --allow-superuser ./releases
+goto ~/Rocket.Chat/releases/bundle/programs/server/npm/node_modules/sharp, run node-gyp rebuild
 docker build -t tavan/rocket.chat:v0.0.1 .
 docker push tavan/rocket.chat:v0.0.1
+
+docker run --env MONGO_URL=mongodb://localhost:27017/rocketchat --net host tavan/rocket.chat:v0.0.5
+
 docker run --rm \
   -v /Users/alexzhang/Codes/TAVAN/test/Rocket.Chat:/bundle \
   -e MONGO_URL=mongodb://localhost:27017/appdb \
@@ -9,7 +19,10 @@ docker run --rm \
   -p 8083:80 \
   --net host \
   abernix/meteord:base
+
+
 npm install chromedriver --chromedriver_cdnurl=https://npm.taobao.org/mirrors/chromedriver
+如果出现找不到目录的情况：npm run postinstall
 
 ![Rocket.Chat logo](https://rocket.chat/images/logo/logo-dark.svg?v3)
 
