@@ -6,6 +6,8 @@ meteor npm install -g node-gyp node-pre-gyp
 #build method
 meteor add rocketchat:lib
 NODE_OPTIONS="--max-old-space-size=8142" meteor build --server-only --headless --allow-superuser ./releases
+~/Rocket.Chat/releases/bundle/programs/server# npm install --unsafe-perm
+# ~/Rocket.Chat/releases/bundle/programs/server# npm -f i fibers@2.0.0
 goto ~/Rocket.Chat/releases/bundle/programs/server/npm/node_modules/sharp, run node-gyp rebuild
 docker build -t tavan/rocket.chat:v0.0.1 .
 docker push tavan/rocket.chat:v0.0.1

@@ -1,4 +1,4 @@
-FROM rocketchat/base:8
+FROM tavan/rocket.chat.base
 
 MAINTAINER buildmaster@rocket.chat
 
@@ -8,7 +8,7 @@ COPY ./releases/Rocket.Chat.tar.gz /app
 RUN set -x \
  && tar -xf /app/Rocket.Chat.tar.gz -C /app \
  && cd /app/bundle/programs/server \
- && npm install \
+ && npm install --unsafe-perm \
 #  && npm cache clear --force \
  && chown -R rocketchat:rocketchat /app
 
