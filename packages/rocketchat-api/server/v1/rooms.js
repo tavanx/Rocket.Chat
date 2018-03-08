@@ -49,7 +49,10 @@ RocketChat.API.v1.addRoute('rooms.list', { authRequired: true }, {
 		rooms.forEach((r) => {
 			Meteor.runAsUser(this.userId, () => {
 				r.lastmsg = RocketChat.models.Messages.getLastVisibleMessageSentWithNoTypeByRoomId(r._id);
-				r.unread = RocketChat.models.Subscriptions.findOneByRoomIdAndUserId(r._id, this.userId).unread;
+
+				const sub = RocketChat.models.Subscriptions.findOneByRoomIdAndUserId(r._id, this.userId);
+				r.unread = sub.unread;
+				r.sub = sub;
 			});
 		});
 
